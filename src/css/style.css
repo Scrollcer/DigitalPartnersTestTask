@@ -1,0 +1,87 @@
+.graph {
+    height: 279px;
+    background: white;
+    padding: 30px;
+}
+
+.graph__inner {
+    display: flex;
+}
+
+.graph__columns {
+    display: flex;
+}
+
+.graph__days {
+    padding-top: 18px;
+    height: 100%;
+    width: 20px;
+}
+
+.graph__text {
+    color: grey;
+    display: block;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+}
+
+.graph__text_day:first-child {
+    padding-top: 0;
+}
+
+.graph__text_day {
+    padding-top: 19px;
+    font-size: 12px;
+}
+
+.graph__text_month {
+    padding-bottom: 2px;
+    font-size: 12px;
+}
+
+.graph__text_description {
+    font-size: 8px;
+    margin: 3px 10px 0 10px;
+}
+
+.graph__description {
+    display: flex;
+    padding-top: 18px;
+    padding-left: 15px;
+}
+
+.graph__block {
+    width: 15px;
+    height: 15px;
+    margin: 0 1px;
+}
+
+.graph__empty-block {
+    background-color: #EDEDED;
+}
+
+.graph__low-block {
+    background-color: #ACD5F2;
+}
+
+.graph__middle-block {
+    background-color: #7FA8C9;
+}
+
+.graph__high-block {
+    background-color: #527BA0;
+}
+
+.graph__highest-block {
+    background-color: #254E77;
+}
+
+.graph__row {
+    margin-top: 2px;
+    display: flex;
+    justify-content: center;
+}
+
+.graph__starting-column{
+    margin-top: 16px;
+}

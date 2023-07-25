@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contribution Graph</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+
+<div class="graph">
+    <div class="graph__inner">
+        <div class="graph__days">
+            <span class="graph__text graph__text_day">
+                Пн
+            </span>
+            <span class="graph__text graph__text_day">
+                Ср
+            </span>
+            <span class="graph__text graph__text_day">
+                Пт
+            </span>
+        </div>
+        <div id="graph-columns" class="graph__columns">
+            <div id='month' class="graph__starting-column"></div>
+        </div>
+    </div>
+
+    <div class="graph__description">
+        <span class="graph__text graph__text_description">
+            Меньше
+        </span>
+        <div class="graph__block graph__empty-block"></div>
+        <div class="graph__block graph__low-block"></div>
+        <div class="graph__block graph__middle-block"></div>
+        <div class="graph__block graph__high-block"></div>
+        <div class="graph__block graph__highest-block"></div>
+        <span class="graph__text graph__text_description">
+            Больше
+        </span>
+    </div>
+</div>
+
+<script>
+    const monthNames = ["Янв.", "Февр.", "Март", "Апр.", "Май", "Июнь",
+        "Июль", "Авг.", "Сент.", "Окт.", "Нояб.", "Дек."
+    ];
+
+    const url = "https://dpg.gg/test/calendar.json";
+    var obj;
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            obj = data;
+        })
+        .then(() => {
+
+            function getDaysHTML(firstRows, secondRows, thirdRows, fourthRows, fifthRows, sixthRows, seventhRows) {
+                let days = "<span class='graph__text graph__text_month'>" + monthNames[iter] + "</span>" +
+                    "<div class='graph__row'>" +
+                    firstRows +
+                    "</div>" +
+                    "<div class='graph__row'>" +
+                    secondRows +
+                    "</div>" +
+                    "<div class='graph__row'>" +
+                    thirdRows +
+                    "</div>" + "<div class='graph__row'>" +
+                    fourthRows +
+                    "</div>" + "<div class='graph__row'>" +
+                    fifthRows +
+                    "</div>" + "<div class='graph__row'>" +
+                    sixthRows +
+                    "</div>" + "<div class='graph__row'>" +
+                    seventhRows +
+                    "</div>";
+
+                return days;
+            }
+
+            var gal = document.getElementById('graph-columns');
+
+            for (var i = 0; i < 12; i++) {
+                gal.innerHTML += "<div id='month-" + i + "'></div>";
+            }
+
+            const d = new Date();
+            let iter = d.getMonth();
+
+            let current = 11;
+            let currentRow = 1;
+
+            function createRow(currentRow, month, count) {
+                let day = currentRow;
+                let currentMonth = month;
+                let row = "";
+                for (let j = 0; j < count; j++) {
+                    let stringDay = day.toString();
+                    if (stringDay.length < 2){
+                        stringDay = "0" + stringDay;
+                    }
+                    row += "<div class='graph__block graph__empty-block' id ='" + currentMonth + "-" + stringDay + "'></div>";
+                    if (day < 25) {
+                        day += 7;
+                    } else {
+                        day = day - 30 + 7;
+                        currentMonth++;
+                    }
+                }
+                return row;
+            }
+
+            while (current >= 0) {
+                let firstRows = "", secondRows = "", thirdRows = "", fourthRows = "", fifthRows = "", sixthRows = "",
+                    seventhRows = "";
+                let count;
+                if (iter === 0 || iter === 3 || iter === 6 || iter === 9) {
+                    count = 5;
+                } else {
+                    count = 4;
+                }
+                let month = iter;
+                month++;
+                firstRows = createRow(currentRow, month, count);
+                currentRow++;
+                secondRows = createRow(currentRow, month, count);
+                currentRow++;
+                thirdRows = createRow(currentRow, month, count);
+                currentRow++;
+                fourthRows = createRow(currentRow, month, count);
+                currentRow++;
+                fifthRows = createRow(currentRow, month, count);
+                currentRow++;
+                sixthRows = createRow(currentRow, month, count);
+                currentRow++;
+                seventhRows = createRow(currentRow, month, count);
+                currentRow = 1;
+
+                document.getElementById("month-" + current).innerHTML = getDaysHTML(firstRows, secondRows, thirdRows, fourthRows, fifthRows, sixthRows, seventhRows);
+                current -= 1;
+                iter -= 1;
+                if (iter < 0) {
+                    iter = 11;
+                }
+            }
+
+            let day = 0;
+            for (let i = 0; i < Math.ceil(d.getDate() / 7); i++) {
+                day++;
+                rows += "<div class='graph__block graph__empty-block' id ='" + d.getMonth() + "-" + day + "'></div>";
+            }
+            document.getElementById("month-11").innerHTML = "" +
+                "<span class='graph__text graph__text_month'>" + monthNames[iter] + "</span>" +
+                "<div class='graph__row'>" +
+                rows +
+                "</div>" +
+                "<div class='graph__row'>" +
+                rows +
+                "</div>" +
+                "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>";
+
+            rows = "";
+
+            function daysInThisMonth() {
+                return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+            }
+
+            for (let i = 0; i < Math.ceil(((d.getDate() - daysInThisMonth()) * -1) / 7); i++) {
+                rows += "<div class='graph__block graph__empty-block'></div>";
+            }
+
+            document.getElementById("month").innerHTML = "" +
+                "<div class='graph__row'>" +
+                rows +
+                "</div>" +
+                "<div class='graph__row'>" +
+                rows +
+                "</div>" +
+                "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>" + "<div class='graph__row'>" +
+                rows +
+                "</div>";
+
+            for (var key in obj) {
+                let lastFour = key.substr(key.length - 4);
+                if (document.getElementById(lastFour)) {
+                    document.getElementById(lastFour).innerHTML = "<div class='graph__block graph__highest-block'></div>";
+                }
+            }
+
+        });
+
+
+</script>
+
+</body>
+</html>
